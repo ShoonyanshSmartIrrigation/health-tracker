@@ -19,7 +19,9 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    final bleConnection = ref.watch(bleConnectionStateProvider).value ?? BleConnectionState.disconnected;
+    final bleConnection =
+        ref.watch(bleConnectionStateProvider).value ??
+        BleConnectionState.disconnected;
     final isConnected = bleConnection == BleConnectionState.connected;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.darkBg : AppTheme.lightBg;
@@ -40,17 +42,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 100.0), // Extra bottom padding for floating bar
+                    padding: const EdgeInsets.fromLTRB(
+                      20.0,
+                      12.0,
+                      20.0,
+                      100.0,
+                    ), // Extra bottom padding for floating bar
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _buildHealthScoreRing(),
                         const SizedBox(height: 24),
-                        _buildSectionHeader('Live Vitals', onAction: () => context.push('/live')),
+                        _buildSectionHeader(
+                          'Live Vitals',
+                          onAction: () => context.push('/live'),
+                        ),
                         const SizedBox(height: 12),
                         _buildVitalsGrid(),
-                        const SizedBox(height: 24),
-                        _buildSectionHeader('Weekly Activity', onAction: () => context.push('/analytics')),
+                        const SizedBox(height: 14),
+                        _buildSectionHeader(
+                          'Weekly Activity',
+                          onAction: () => context.push('/analytics'),
+                        ),
                         const SizedBox(height: 12),
                         _buildWeeklyChartCard(),
                         const SizedBox(height: 24),
@@ -74,12 +87,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.bluetooth_disabled_rounded, color: Colors.white, size: 16),
+          const Icon(
+            Icons.bluetooth_disabled_rounded,
+            color: Colors.white,
+            size: 16,
+          ),
           const SizedBox(width: 8),
           const Expanded(
             child: Text(
               'Wearable Disconnected. Tap to pair.',
-              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           GestureDetector(
@@ -90,7 +111,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text('Connect', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+              child: const Text(
+                'Connect',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],
@@ -102,7 +130,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final profile = ref.watch(profileProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final titleColor = isDark ? AppTheme.darkText : AppTheme.lightText;
-    final subtitleColor = isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary;
+    final subtitleColor = isDark
+        ? AppTheme.darkTextSecondary
+        : AppTheme.lightTextSecondary;
 
     final hour = DateTime.now().hour;
     String greeting = 'Good Morning';
@@ -122,11 +152,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             children: [
               Text(
                 greeting,
-                style: TextStyle(fontSize: 14, color: subtitleColor, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: subtitleColor,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               Text(
                 profile.name ?? 'Jane Doe',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: titleColor),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
               ),
             ],
           ),
@@ -134,9 +172,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             children: [
               IconButton(
                 icon: Badge(
-                  label: const Text('2', style: TextStyle(color: Colors.white, fontSize: 9)),
+                  label: const Text(
+                    '2',
+                    style: TextStyle(color: Colors.white, fontSize: 9),
+                  ),
                   backgroundColor: AppTheme.error,
-                  child: Icon(Icons.notifications_outlined, size: 26, color: titleColor),
+                  child: Icon(
+                    Icons.notifications_outlined,
+                    size: 26,
+                    color: titleColor,
+                  ),
                 ),
                 onPressed: () => context.push('/notifications'),
               ),
@@ -149,11 +194,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
+                      color: isDark
+                          ? AppTheme.darkPrimary
+                          : AppTheme.lightPrimary,
                       width: 1.5,
                     ),
                     image: const DecorationImage(
-                      image: NetworkImage('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'),
+                      image: NetworkImage(
+                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -176,28 +225,51 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       children: [
         Text(
           title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: titleColor),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: titleColor,
+          ),
         ),
         TextButton(
           onPressed: onAction,
-          style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-          child: Text('View All', style: TextStyle(color: primaryColor, fontSize: 13, fontWeight: FontWeight.w600)),
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Text(
+            'View All',
+            style: TextStyle(
+              color: primaryColor,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ],
     );
   }
 
   Widget _buildHealthScoreRing() {
-    final vitals = ref.watch(vitalsStreamProvider).value ?? BleVitalsData.empty();
+    final vitals =
+        ref.watch(vitalsStreamProvider).value ?? BleVitalsData.empty();
     final profile = ref.watch(profileProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final titleColor = isDark ? AppTheme.darkText : AppTheme.lightText;
-    final subtitleColor = isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary;
+    final subtitleColor = isDark
+        ? AppTheme.darkTextSecondary
+        : AppTheme.lightTextSecondary;
 
     final stepGoal = profile.dailyStepGoal ?? 10000;
     final stepProgress = stepGoal > 0 ? (vitals.steps / stepGoal) : 0.0;
-    final spo2HealthIndex = vitals.spo2 >= 95 ? 1.0 : (vitals.spo2 > 0 ? (vitals.spo2 / 95.0) : 1.0);
-    final double healthScorePercentage = ((stepProgress.clamp(0.0, 1.0) * 0.6) + (spo2HealthIndex.clamp(0.0, 1.0) * 0.4)) * 100;
+    final spo2HealthIndex = vitals.spo2 >= 95
+        ? 1.0
+        : (vitals.spo2 > 0 ? (vitals.spo2 / 95.0) : 1.0);
+    final double healthScorePercentage =
+        ((stepProgress.clamp(0.0, 1.0) * 0.6) +
+            (spo2HealthIndex.clamp(0.0, 1.0) * 0.4)) *
+        100;
     final displayScore = healthScorePercentage.round();
 
     return GlassCard(
@@ -212,14 +284,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Health Score', style: TextStyle(fontSize: 12, color: subtitleColor, fontWeight: FontWeight.w500)),
+                Text(
+                  'Health Score',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: subtitleColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 const SizedBox(height: 2),
                 Text(
                   '$displayScore%',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: titleColor),
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: titleColor,
+                  ),
                 ),
                 const SizedBox(height: 2),
-                const Text('Optimal', style: TextStyle(fontSize: 11, color: AppTheme.success, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Optimal',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.success,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),
@@ -227,22 +317,31 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.flash_on_rounded, color: AppTheme.warning, size: 16),
+              const Icon(
+                Icons.flash_on_rounded,
+                color: AppTheme.warning,
+                size: 16,
+              ),
               const SizedBox(width: 6),
               Text(
                 'Goal progress optimal. Keep moving!',
-                style: TextStyle(fontSize: 12, color: subtitleColor, fontWeight: FontWeight.w500),
-              )
+                style: TextStyle(
+                  fontSize: 12,
+                  color: subtitleColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
   Widget _buildVitalsGrid() {
-    final vitals = ref.watch(vitalsStreamProvider).value ?? BleVitalsData.empty();
-    
+    final vitals =
+        ref.watch(vitalsStreamProvider).value ?? BleVitalsData.empty();
+
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -293,7 +392,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ),
         _buildVitalCard(
           title: 'Calories Active',
-          value: vitals.caloriesBurned > 0 ? '${vitals.caloriesBurned.round()}' : '--',
+          value: vitals.caloriesBurned > 0
+              ? '${vitals.caloriesBurned.round()}'
+              : '--',
           unit: 'kcal',
           icon: Icons.local_fire_department_rounded,
           color: AppTheme.calories,
@@ -309,7 +410,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           color: AppTheme.batteryGreen,
           tapRoute: '/device',
           trendPoints: const [100, 95, 90, 88, 85],
-          statusText: vitals.batteryLevel < 20 && vitals.batteryLevel > 0 ? 'Low' : 'Good',
+          statusText: vitals.batteryLevel < 20 && vitals.batteryLevel > 0
+              ? 'Low'
+              : 'Good',
         ),
       ],
     );
@@ -327,7 +430,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final valueColor = isDark ? AppTheme.darkText : AppTheme.lightText;
-    final labelColor = isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary;
+    final labelColor = isDark
+        ? AppTheme.darkTextSecondary
+        : AppTheme.lightTextSecondary;
 
     return GestureDetector(
       onTap: () => context.push(tapRoute),
@@ -342,14 +447,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               children: [
                 Icon(icon, color: color, size: 22),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     statusText,
-                    style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -410,13 +522,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildWeeklyChartCard() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final subtitleColor = isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary;
+    final subtitleColor = isDark
+        ? AppTheme.darkTextSecondary
+        : AppTheme.lightTextSecondary;
 
     return GlassCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Weekly Step Analysis', style: TextStyle(fontSize: 14, color: subtitleColor, fontWeight: FontWeight.w500)),
+          Text(
+            'Weekly Step Analysis',
+            style: TextStyle(
+              fontSize: 14,
+              color: subtitleColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 16),
           SizedBox(
             height: 140,
@@ -431,20 +552,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (double val, TitleMeta meta) {
-                        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        const days = [
+                          'Mon',
+                          'Tue',
+                          'Wed',
+                          'Thu',
+                          'Fri',
+                          'Sat',
+                          'Sun',
+                        ];
                         if (val.toInt() >= 0 && val.toInt() < days.length) {
                           return Text(
                             days[val.toInt()],
-                            style: TextStyle(color: subtitleColor.withOpacity(0.6), fontSize: 10),
+                            style: TextStyle(
+                              color: subtitleColor.withOpacity(0.6),
+                              fontSize: 10,
+                            ),
                           );
                         }
                         return const Text('');
                       },
                     ),
                   ),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 gridData: const FlGridData(show: false),
@@ -467,20 +605,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   BarChartGroupData _buildBarGroup(int x, double y, {bool isToday = false}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryBarColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
+    final primaryBarColor = isDark
+        ? AppTheme.darkPrimary
+        : AppTheme.lightPrimary;
 
     return BarChartGroupData(
       x: x,
       barRods: [
         BarChartRodData(
           toY: y,
-          color: isToday ? AppTheme.heartRate : primaryBarColor.withOpacity(0.7),
+          color: isToday
+              ? AppTheme.heartRate
+              : primaryBarColor.withOpacity(0.7),
           width: 14,
           borderRadius: BorderRadius.circular(4),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 12000,
-            color: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+            color: isDark
+                ? Colors.white.withOpacity(0.04)
+                : Colors.black.withOpacity(0.03),
           ),
         ),
       ],
@@ -490,7 +634,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildGoalsSummaryCard() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final titleColor = isDark ? AppTheme.darkText : AppTheme.lightText;
-    final subtitleColor = isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary;
+    final subtitleColor = isDark
+        ? AppTheme.darkTextSecondary
+        : AppTheme.lightTextSecondary;
 
     return GlassCard(
       child: Column(
@@ -498,9 +644,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.emoji_events_rounded, color: AppTheme.warning, size: 22),
+              const Icon(
+                Icons.emoji_events_rounded,
+                color: AppTheme.warning,
+                size: 22,
+              ),
               const SizedBox(width: 8),
-              Text('Streak Achieved', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: titleColor)),
+              Text(
+                'Streak Achieved',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -517,11 +674,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 radius: 14,
                 backgroundColor: index < 5
                     ? AppTheme.success.withOpacity(0.15)
-                    : (isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03)),
+                    : (isDark
+                          ? Colors.white.withOpacity(0.05)
+                          : Colors.black.withOpacity(0.03)),
                 child: Icon(
                   index < 5 ? Icons.check : Icons.circle_outlined,
                   size: 14,
-                  color: index < 5 ? AppTheme.success : (isDark ? Colors.white24 : Colors.black26),
+                  color: index < 5
+                      ? AppTheme.success
+                      : (isDark ? Colors.white24 : Colors.black26),
                 ),
               ),
             ),
@@ -541,7 +702,7 @@ class MiniSparklinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (data.length < 2) return;
-    
+
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
