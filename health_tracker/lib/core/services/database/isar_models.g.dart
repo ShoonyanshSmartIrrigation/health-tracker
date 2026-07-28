@@ -37,28 +37,33 @@ const UserProfileModelSchema = CollectionSchema(
       name: r'dailyWaterGoal',
       type: IsarType.long,
     ),
-    r'gender': PropertySchema(
+    r'email': PropertySchema(
       id: 4,
+      name: r'email',
+      type: IsarType.string,
+    ),
+    r'gender': PropertySchema(
+      id: 5,
       name: r'gender',
       type: IsarType.string,
     ),
     r'heightCm': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'heightCm',
       type: IsarType.double,
     ),
     r'name': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'name',
       type: IsarType.string,
     ),
     r'targetSleepHours': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'targetSleepHours',
       type: IsarType.double,
     ),
     r'weightKg': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'weightKg',
       type: IsarType.double,
     )
@@ -84,6 +89,12 @@ int _userProfileModelEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
+    final value = object.email;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.gender;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -108,11 +119,12 @@ void _userProfileModelSerialize(
   writer.writeLong(offsets[1], object.dailyCaloriesGoal);
   writer.writeLong(offsets[2], object.dailyStepGoal);
   writer.writeLong(offsets[3], object.dailyWaterGoal);
-  writer.writeString(offsets[4], object.gender);
-  writer.writeDouble(offsets[5], object.heightCm);
-  writer.writeString(offsets[6], object.name);
-  writer.writeDouble(offsets[7], object.targetSleepHours);
-  writer.writeDouble(offsets[8], object.weightKg);
+  writer.writeString(offsets[4], object.email);
+  writer.writeString(offsets[5], object.gender);
+  writer.writeDouble(offsets[6], object.heightCm);
+  writer.writeString(offsets[7], object.name);
+  writer.writeDouble(offsets[8], object.targetSleepHours);
+  writer.writeDouble(offsets[9], object.weightKg);
 }
 
 UserProfileModel _userProfileModelDeserialize(
@@ -126,12 +138,13 @@ UserProfileModel _userProfileModelDeserialize(
   object.dailyCaloriesGoal = reader.readLongOrNull(offsets[1]);
   object.dailyStepGoal = reader.readLongOrNull(offsets[2]);
   object.dailyWaterGoal = reader.readLongOrNull(offsets[3]);
-  object.gender = reader.readStringOrNull(offsets[4]);
-  object.heightCm = reader.readDoubleOrNull(offsets[5]);
+  object.email = reader.readStringOrNull(offsets[4]);
+  object.gender = reader.readStringOrNull(offsets[5]);
+  object.heightCm = reader.readDoubleOrNull(offsets[6]);
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[6]);
-  object.targetSleepHours = reader.readDoubleOrNull(offsets[7]);
-  object.weightKg = reader.readDoubleOrNull(offsets[8]);
+  object.name = reader.readStringOrNull(offsets[7]);
+  object.targetSleepHours = reader.readDoubleOrNull(offsets[8]);
+  object.weightKg = reader.readDoubleOrNull(offsets[9]);
   return object;
 }
 
@@ -153,12 +166,14 @@ P _userProfileModelDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 6:
       return (reader.readStringOrNull(offset)) as P;
-    case 7:
+    case 6:
       return (reader.readDoubleOrNull(offset)) as P;
+    case 7:
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 9:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -551,6 +566,160 @@ extension UserProfileModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'email',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'email',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'email',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'email',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'email',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'email',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'email',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'email',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'email',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'email',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'email',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterFilterCondition>
+      emailIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'email',
+        value: '',
       ));
     });
   }
@@ -1235,6 +1404,19 @@ extension UserProfileModelQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterSortBy> sortByEmail() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'email', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterSortBy>
+      sortByEmailDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'email', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfileModel, UserProfileModel, QAfterSortBy>
       sortByGender() {
     return QueryBuilder.apply(this, (query) {
@@ -1362,6 +1544,19 @@ extension UserProfileModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterSortBy> thenByEmail() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'email', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileModel, UserProfileModel, QAfterSortBy>
+      thenByEmailDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'email', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfileModel, UserProfileModel, QAfterSortBy>
       thenByGender() {
     return QueryBuilder.apply(this, (query) {
@@ -1474,6 +1669,13 @@ extension UserProfileModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfileModel, UserProfileModel, QDistinct> distinctByEmail(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'email', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserProfileModel, UserProfileModel, QDistinct> distinctByGender(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1542,6 +1744,12 @@ extension UserProfileModelQueryProperty
       dailyWaterGoalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dailyWaterGoal');
+    });
+  }
+
+  QueryBuilder<UserProfileModel, String?, QQueryOperations> emailProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'email');
     });
   }
 

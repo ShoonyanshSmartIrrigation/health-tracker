@@ -128,6 +128,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildHeader(BuildContext context) {
     final profile = ref.watch(profileProvider);
+    final authState = ref.watch(authStateProvider);
+    final firebaseUser = authState.value;
+
+    String displayName = 'User';
+    if (profile.name != null && profile.name != 'Jane Doe' && profile.name != 'User') {
+      displayName = profile.name!;
+    } else if (firebaseUser != null && firebaseUser.displayName.isNotEmpty && firebaseUser.displayName != 'User') {
+      displayName = firebaseUser.displayName;
+    } else {
+      displayName = profile.name ?? 'Jane Doe';
+    }
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final titleColor = isDark ? AppTheme.darkText : AppTheme.lightText;
     final subtitleColor = isDark
@@ -159,7 +171,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
               Text(
-                profile.name ?? 'Jane Doe',
+                displayName,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -193,17 +205,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   width: 40,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: isDark
+                          ? [AppTheme.darkPrimary, AppTheme.darkAccent]
+                          : [AppTheme.lightPrimary, AppTheme.lightAccent],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     border: Border.all(
                       color: isDark
                           ? AppTheme.darkPrimary
                           : AppTheme.lightPrimary,
                       width: 1.5,
                     ),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+                  ),
+                  child: Center(
+                    child: Text(
+                      displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

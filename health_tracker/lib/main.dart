@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'core/config/routes.dart';
 import 'core/services/auth_service.dart';
 import 'core/services/database/database_service.dart';
@@ -8,6 +9,13 @@ import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('Firebase initialization skipped or failed: $e');
+  }
 
   // Async initialization of local databases & mock authentication
   final dbService = DatabaseService();

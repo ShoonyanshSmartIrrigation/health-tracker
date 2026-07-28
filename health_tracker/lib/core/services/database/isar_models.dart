@@ -6,6 +6,7 @@ part 'isar_models.g.dart';
 class UserProfileModel {
   Id id = Isar.autoIncrement;
   String? name;
+  String? email;
   int? age;
   String? gender;
   double? heightCm;

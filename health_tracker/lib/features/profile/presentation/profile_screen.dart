@@ -30,7 +30,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void initState() {
     super.initState();
     final profile = ref.read(profileProvider);
-    _nameController = TextEditingController(text: profile.name ?? '');
+    final authState = ref.read(authStateProvider);
+    final firebaseUser = authState.value;
+
+    String initialName = '';
+    if (profile.name != null && profile.name != 'Jane Doe' && profile.name != 'User') {
+      initialName = profile.name!;
+    } else if (firebaseUser != null && firebaseUser.displayName.isNotEmpty && firebaseUser.displayName != 'User') {
+      initialName = firebaseUser.displayName;
+    } else {
+      initialName = profile.name ?? '';
+    }
+
+    _nameController = TextEditingController(text: initialName);
     _ageController = TextEditingController(text: '${profile.age ?? 28}');
     _heightController = TextEditingController(text: '${profile.heightCm ?? 168.0}');
     _weightController = TextEditingController(text: '${profile.weightKg ?? 62.0}');
@@ -134,6 +146,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider);
+    final authState = ref.watch(authStateProvider);
+    final firebaseUser = authState.value;
+
+    String displayName = 'User';
+    if (profile.name != null && profile.name != 'Jane Doe' && profile.name != 'User') {
+      displayName = profile.name!;
+    } else if (firebaseUser != null && firebaseUser.displayName.isNotEmpty && firebaseUser.displayName != 'User') {
+      displayName = firebaseUser.displayName;
+    } else {
+      displayName = profile.name ?? 'Jane Doe';
+    }
+
+    final email = profile.email ?? firebaseUser?.email ?? 'jane.doe@healthsync.com';
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppTheme.darkBg : AppTheme.lightBg;
     final titleColor = isDark ? AppTheme.darkText : AppTheme.lightText;
@@ -186,21 +212,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             width: 96,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: primaryBtnColor, width: 2),
-                              image: const DecorationImage(
-                                image: NetworkImage('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200'),
-                                fit: BoxFit.cover,
+                              gradient: LinearGradient(
+                                colors: isDark
+                                    ? [AppTheme.darkPrimary, AppTheme.darkAccent]
+                                    : [AppTheme.lightPrimary, AppTheme.lightAccent],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              border: Border.all(color: primaryBtnColor, width: 2.5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: (isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary).withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            profile.name ?? 'Jane Doe',
+                            displayName,
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: titleColor),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            ref.read(authStateProvider).value?.email ?? 'jane.doe@healthsync.com',
+                            email,
                             style: TextStyle(fontSize: 13, color: subtitleColor),
                           ),
                         ],
