@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class UserProfile {
   final String uid;
@@ -168,6 +170,23 @@ class AuthService {
           }, SetOptions(merge: true));
         } catch (e) {
           debugPrint('Failed to save user profile to Firestore at sign up: $e');
+        }
+
+        // Save name and email in Firebase Realtime Database at the time of sign up
+        try {
+          // Firebase Realtime Database does not allow '.' in path keys, so we sanitize it to '_'
+          final sanitizedEmail = email.replaceAll('.', '_');
+          final dbRef = FirebaseDatabase.instanceFor(
+            app: Firebase.app(),
+            databaseURL: 'https://health-tracker-bf9f0-default-rtdb.asia-southeast1.firebasedatabase.app',
+          ).ref('$sanitizedEmail/${user.uid}');
+          await dbRef.set({
+            'name': name,
+            'email': email,
+            'updatedAt': DateTime.now().toIso8601String(),
+          });
+        } catch (e) {
+          debugPrint('Failed to save user profile to Realtime Database at sign up: $e');
         }
 
         final profile = UserProfile(

@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'auth_service.dart';
 import 'ble/ble_service.dart';
 import 'ble/mock_ble_service.dart';
@@ -117,10 +119,11 @@ class ProfileNotifier extends StateNotifier<UserProfileModel> {
     // 2. Upload to Firestore (if online/logged in)
     final firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
+      final map = _profileToMap(newProfile);
+      map['email'] = firebaseUser.email;
+
       try {
         final docRef = FirebaseFirestore.instance.collection('users').doc(firebaseUser.uid);
-        final map = _profileToMap(newProfile);
-        map['email'] = firebaseUser.email;
         // Merge with existing Firestore data
         await docRef.set(map, SetOptions(merge: true));
 
@@ -130,6 +133,21 @@ class ProfileNotifier extends StateNotifier<UserProfileModel> {
         }
       } catch (e) {
         debugPrint('Failed to save profile to Firestore: $e');
+      }
+
+      // 3. Upload to Firebase Realtime Database
+      try {
+        final emailVal = firebaseUser.email ?? newProfile.email ?? '';
+        if (emailVal.isNotEmpty) {
+          final sanitizedEmail = emailVal.replaceAll('.', '_');
+          final rtdbRef = FirebaseDatabase.instanceFor(
+            app: Firebase.app(),
+            databaseURL: 'https://health-tracker-bf9f0-default-rtdb.asia-southeast1.firebasedatabase.app',
+          ).ref('$sanitizedEmail/${firebaseUser.uid}/profile');
+          await rtdbRef.set(map);
+        }
+      } catch (e) {
+        debugPrint('Failed to save profile to Realtime Database: $e');
       }
     }
   }
