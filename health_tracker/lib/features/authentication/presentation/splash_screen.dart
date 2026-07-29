@@ -49,10 +49,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 
     if (!mounted) return;
 
-    // Check Authentication
-    final user = ref.read(authStateProvider).value;
+    // Check Authentication via secure storage
+    final isLoggedIn = await ref.read(authServiceProvider).isUserLoggedInSecurely();
 
-    if (user != null) {
+    if (isLoggedIn) {
       context.go('/dashboard');
     } else {
       context.go('/onboarding');

@@ -26,6 +26,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/splash',
     debugLogDiagnostics: true,
     redirect: (context, state) {
+      if (authState.isLoading) return null;
+
       final isLoggedIn = authState.value != null;
       final isLoggingIn = state.matchedLocation == '/login' ||
           state.matchedLocation == '/register' ||
